@@ -1,0 +1,20 @@
+# Created by .ignore support plugin (hsz.mobi)
+target
+.bloop
+.metals
+.idea
+build
+.gradle
+.gradle/
+.idea/$PRODUCT_WORKSPACE_FILE$
+.idea/.gitignore
+.idea/codeStyles/
+.idea/gradle.xml
+.idea/misc.xml
+.idea/sbt.xml
+.idea/vcs.xml
+build.gradle.kts
+gradle/
+gradlew
+gradlew.bat
+settings.gradle
