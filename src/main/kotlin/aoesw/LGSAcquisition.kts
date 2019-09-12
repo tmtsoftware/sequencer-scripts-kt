@@ -59,7 +59,7 @@ script {
     val oiwfsLoopStatesChoices = choicesOf("IDLE", "LOST", "ACTIVE")
     val oiwfsLoopKey = choiceKey("oiwfsPoa", oiwfsLoopStatesChoices)
 
-    fun handleOiwfsLoopOpen(oiwfsProbeNum: Int): Unit {
+    fun handleOiwfsLoopOpen(oiwfsProbeNum: Int) {
         // Do something
     }
 
@@ -76,14 +76,15 @@ script {
     val TCSOFFSETTHRESHOLD = 2.0 // arcsec ???
     fun isOffsetRequired(x: Float, y: Float): Boolean = sqrt(x * x + y * y) > TCSOFFSETTHRESHOLD
 
-    fun increaseExposureTime(): Unit {
+    fun increaseExposureTime() {
         // not sure how this is done
     }
 
     // fixme: should return SubmitResponse
     suspend fun offsetTcs(xoffset: Float, yoffset: Float, probeNum: Int, obsId: String?) =
             submitSequence("tcs", "darknight",
-                    Sequence.apply(  // fixme: provide better api in script-dsl
+                    // fixme: provide better api in script-dsl
+                    Sequence.apply(
                             setup(aosq.prefix, "offset", obsId)
                                     .add(tcsOffsetCoordSystemKey.set(arrayOf(Choice("RADEC")), NoUnits))
                                     .add(tcsOffsetXKey.set(xoffset))
@@ -146,7 +147,6 @@ script {
 
                 if (timesGuideStarLocked == guideStarLockedThreshold) addOrUpdateCommand(CommandResponse.Completed(command.runId()))
                 else addOrUpdateCommand(CommandResponse.Error(command.runId(), "Guide Star Unstable"))
-
             }
             else -> addOrUpdateCommand(CommandResponse.Error(command.runId(), "Error starting WFS exposures: $response"))
         }
