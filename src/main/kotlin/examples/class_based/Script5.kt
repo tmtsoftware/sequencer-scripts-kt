@@ -42,7 +42,5 @@ class Script5(cswServices: CswServices) : ScriptKt(cswServices) {
             }
             close()
         }
-
     }
-
 }

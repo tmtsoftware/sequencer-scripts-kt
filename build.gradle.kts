@@ -8,6 +8,7 @@ plugins {
     kotlin("jvm") version "1.3.50"
     `maven-publish`
     application
+    id("org.jmailen.kotlinter") version "2.1.1"
 }
 
 application {
@@ -19,6 +20,7 @@ repositories {
     mavenCentral()
     jcenter()
     maven("https://jitpack.io")
+    maven("https://plugins.gradle.org/m2/")
 }
 
 dependencies {
@@ -55,4 +57,8 @@ publishing {
             from(components["java"])
         }
     }
+}
+
+kotlinter {
+    disabledRules = arrayOf("no-wildcard-imports")
 }

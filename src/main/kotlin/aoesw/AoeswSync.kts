@@ -1,9 +1,9 @@
 package aoesw
 
 import esw.ocs.dsl.core.script
+import esw.ocs.dsl.params.*
 import esw.ocs.dsl.params.floatKey
 import esw.ocs.dsl.params.madd
-import esw.ocs.dsl.params.*
 import esw.ocs.dsl.params.taiTimeKey
 
 script {
@@ -26,10 +26,9 @@ script {
                 .madd(probeOffsetXParam, probeOffsetYParam)
 
         addSubCommand(command, probeCommand)
-        scheduleOnce(scheduledTime.jGet(0).get()) {
+        scheduleOnce(scheduledTime(0)) {
             val response = submitAndWaitCommandToAssembly("probeAssembly", probeCommand)
             updateSubCommand(response)
-
         }
     }
 

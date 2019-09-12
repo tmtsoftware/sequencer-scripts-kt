@@ -55,5 +55,4 @@ class Script1(cswServices: CswServices) : ScriptKt(cswServices) {
             close()
         }
     }
-
 }
