@@ -1,7 +1,7 @@
 package aoesw
 
 import csw.params.commands.CommandResponse
-import csw.params.commands.Sequence
+import csw.params.commands.CommandResponse.Error
 import csw.params.core.models.Choice
 import csw.params.events.SystemEvent
 import csw.params.javadsl.JUnits.NoUnits
@@ -80,16 +80,14 @@ script {
         // not sure how this is done
     }
 
-    // fixme: should return SubmitResponse
     suspend fun offsetTcs(xoffset: Float, yoffset: Float, probeNum: Int, obsId: String?) =
             submitSequence("tcs", "darknight",
-                    // fixme: provide better api in script-dsl
-                    Sequence.apply(
+                    sequenceOf(
                             setup(aosq.prefix, "offset", obsId)
-                                    .add(tcsOffsetCoordSystemKey.set(arrayOf(Choice("RADEC")), NoUnits))
+                                    .add(tcsOffsetCoordSystemKey.set(Choice("RADEC")))
                                     .add(tcsOffsetXKey.set(xoffset))
                                     .add(tcsOffsetYKey.set(yoffset))
-                                    .add(tcsOffsetVTKey.set(arrayOf(Choice("OIWFS$probeNum")), NoUnits)), null
+                                    .add(tcsOffsetVTKey.set(Choice("OIWFS$probeNum")))
                     )
             )
 
@@ -146,9 +144,9 @@ script {
                 }
 
                 if (timesGuideStarLocked == guideStarLockedThreshold) addOrUpdateCommand(CommandResponse.Completed(command.runId()))
-                else addOrUpdateCommand(CommandResponse.Error(command.runId(), "Guide Star Unstable"))
+                else addOrUpdateCommand(Error(command.runId(), "Guide Star Unstable"))
             }
-            else -> addOrUpdateCommand(CommandResponse.Error(command.runId(), "Error starting WFS exposures: $response"))
+            else -> addOrUpdateCommand(Error(command.runId(), "Error starting WFS exposures: $response"))
         }
         subscription.unsubscribe()
     }
