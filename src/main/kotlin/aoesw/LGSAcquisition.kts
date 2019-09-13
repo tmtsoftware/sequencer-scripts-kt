@@ -1,12 +1,12 @@
 package aoesw
 
-import csw.params.commands.CommandResponse
+import csw.params.commands.CommandResponse.Completed
 import csw.params.commands.CommandResponse.Error
 import csw.params.core.models.Choice
 import csw.params.events.SystemEvent
+import esw.ocs.dsl.cancel
 import esw.ocs.dsl.core.script
 import esw.ocs.dsl.params.*
-import esw.ocs.impl.dsl.StopIf
 import kotlin.math.sqrt
 import kotlin.time.ExperimentalTime
 import kotlin.time.milliseconds
@@ -66,7 +66,7 @@ script {
         when (event) {
             is SystemEvent -> {
                 val oiwfsLoopStates = event(oiwfsLoopKey)
-                val ii = oiwfsLoopStates.jValues().indexOf(Choice("LOST"))
+                val ii = oiwfsLoopStates.values().indexOf(Choice("LOST"))
                 if (ii != -1) handleOiwfsLoopOpen(ii)
             }
         }
@@ -92,7 +92,7 @@ script {
 
     handleSetup("enableOiwfsTtf") { command ->
         val ttfProbeNum = when (val event = getEvent(oiwfsStateEvent.key()).first()) {
-            is SystemEvent -> event(oiwfsStateEnableKey).jValues().indexOf(Choice("TTF"))
+            is SystemEvent -> event(oiwfsStateEnableKey).values().indexOf(Choice("TTF"))
             else -> -1
         }
 
@@ -122,7 +122,7 @@ script {
         val response = submitAndWaitCommandToAssembly(oiwfsDetectorAssembly.name, startExposureCommand)
 
         when (response) {
-            is CommandResponse.Completed -> {
+            is Completed -> {
                 val guideStarLockedThreshold = 5 // number of consecutive loops without an offset to consider stable
                 var timesGuideStarLocked: Int = 0
                 val maxAttempts = 20 // maximum number of loops on this guide star before rejecting
@@ -139,14 +139,14 @@ script {
                     }
 
                     attempts += 1
-                    StopIf((timesGuideStarLocked == guideStarLockedThreshold) || (attempts == maxAttempts))
+                    stopIf((timesGuideStarLocked == guideStarLockedThreshold) || (attempts == maxAttempts))
                 }
 
-                if (timesGuideStarLocked == guideStarLockedThreshold) addOrUpdateCommand(CommandResponse.Completed(command.runId()))
+                if (timesGuideStarLocked == guideStarLockedThreshold) addOrUpdateCommand(Completed(command.runId()))
                 else addOrUpdateCommand(Error(command.runId(), "Guide Star Unstable"))
             }
             else -> addOrUpdateCommand(Error(command.runId(), "Error starting WFS exposures: $response"))
         }
-        subscription.unsubscribe()
+        subscription.cancel()
     }
 }

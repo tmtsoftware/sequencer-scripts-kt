@@ -1,9 +1,9 @@
 package aoesw
 
 import esw.ocs.dsl.core.script
-import esw.ocs.dsl.params.*
 import esw.ocs.dsl.params.floatKey
-import esw.ocs.dsl.params.madd
+import esw.ocs.dsl.params.invoke
+import esw.ocs.dsl.params.obsId
 import esw.ocs.dsl.params.taiTimeKey
 
 script {
