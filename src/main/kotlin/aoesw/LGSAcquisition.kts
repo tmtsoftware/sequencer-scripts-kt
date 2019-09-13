@@ -4,7 +4,6 @@ import csw.params.commands.CommandResponse
 import csw.params.commands.CommandResponse.Error
 import csw.params.core.models.Choice
 import csw.params.events.SystemEvent
-import csw.params.javadsl.JUnits.NoUnits
 import esw.ocs.dsl.core.script
 import esw.ocs.dsl.params.*
 import esw.ocs.impl.dsl.StopIf
@@ -116,9 +115,9 @@ script {
         }
 
         // start continuous exposures on TTF probe
-        val probeExpModes = (0..2).map { if (it == ttfProbeNum) Choice("CONTINUOUS") else Choice("NOOP") }
+        val probeExpModes = (0..2).map { if (it == ttfProbeNum) Choice("CONTINUOUS") else Choice("NOOP") }.toTypedArray()
         val startExposureCommand = setup(aosq.prefix, "exposure", command.obsId)
-                .add(oiwfsExposureModeKey.set(probeExpModes.toTypedArray(), NoUnits))
+                .add(oiwfsExposureModeKey.set(*probeExpModes))
 
         val response = submitAndWaitCommandToAssembly(oiwfsDetectorAssembly.name, startExposureCommand)
 
