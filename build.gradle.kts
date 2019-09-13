@@ -25,8 +25,9 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("com.github.tmtsoftware.esw:script-dsl:0.1-SNAPSHOT")
-    implementation("com.github.tmtsoftware.esw:esw-ocs-app_2.13:0.1-SNAPSHOT")
+    implementation("com.github.tmtsoftware.script-dsl:script-dsl:e298c46f0ee8823ba1599f70ddc85ff0c49b3fe6")
+    //fixme: why do we need to specify esw-ocs-app dependency explicitly
+    implementation("com.github.tmtsoftware.esw:esw-ocs-app_2.13:a9b05693edab211331b85676209e69168b7f6611")
     compile("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.3.0")
     compile("org.jetbrains.kotlin", "kotlin-script-runtime", "1.3.50")
 

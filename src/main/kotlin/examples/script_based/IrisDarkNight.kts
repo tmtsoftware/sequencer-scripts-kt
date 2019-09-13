@@ -6,7 +6,7 @@ import kotlin.time.seconds
 import kotlinx.coroutines.future.await
 
 @UseExperimental(ExperimentalTime::class)
-script { csw ->
+script {
 
     val publishStream = publishEvent(10.seconds) {
         systemEvent("iris.test", "system")
