@@ -25,25 +25,21 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("com.github.tmtsoftware.script-dsl:script-dsl:55f759fb8066c71c3d2db77bfdcfddce2c4efd32")
+    implementation("com.github.tmtsoftware.script-dsl:script-dsl:5583d729ead5d6943ce07f7f343cdb5d08eeccaa")
     //fixme: why do we need to specify esw-ocs-app dependency explicitly
-    implementation("com.github.tmtsoftware.esw:esw-ocs-app_2.13:a9b05693edab211331b85676209e69168b7f6611")
+    implementation("com.github.tmtsoftware.esw:esw-ocs-app_2.13:7fd36560f222a03439920f8f77c1a169aeb82cf0")
     compile("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.3.0")
     compile("org.jetbrains.kotlin", "kotlin-script-runtime", "1.3.50")
 
     testCompile("junit", "junit", "4.12")
 }
 
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = "1.8"
-//            freeCompilerArgs = listOf("-Xuse-experimental=kotlin.Experimental")
-    }
-}
-
-
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType<KotlinCompile>().all {
+    kotlinOptions.freeCompilerArgs += "-Xuse-experimental=kotlin.time.ExperimentalTime"
 }
 
 task<Jar>("sourcesJar") {

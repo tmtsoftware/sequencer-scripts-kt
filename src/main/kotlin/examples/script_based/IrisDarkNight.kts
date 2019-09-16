@@ -1,11 +1,9 @@
 package examples.script_based
 
 import esw.ocs.dsl.core.script
-import kotlin.time.ExperimentalTime
 import kotlin.time.seconds
 import kotlinx.coroutines.future.await
 
-@UseExperimental(ExperimentalTime::class)
 script {
 
     val publishStream = publishEvent(10.seconds) {

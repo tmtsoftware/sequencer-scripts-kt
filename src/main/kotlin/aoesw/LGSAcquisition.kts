@@ -6,9 +6,9 @@ import csw.params.core.models.Choice
 import csw.params.events.SystemEvent
 import esw.ocs.dsl.cancel
 import esw.ocs.dsl.core.script
+import esw.ocs.dsl.core.utils.loop
 import esw.ocs.dsl.params.*
 import kotlin.math.sqrt
-import kotlin.time.ExperimentalTime
 import kotlin.time.milliseconds
 
 object aosq {
@@ -31,7 +31,6 @@ object rtcAssembly {
     val name = "nfiraos-rtc-assembly"
 }
 
-@UseExperimental(ExperimentalTime::class)
 script {
     val oiwfsExposureModeChoices = choicesOf("SINGLE", "CONTINUOUS", "STOP", "NOOP")
     val oiwfsExposureModeKey = choiceKey("mode", oiwfsExposureModeChoices)
@@ -66,7 +65,7 @@ script {
         when (event) {
             is SystemEvent -> {
                 val oiwfsLoopStates = event(oiwfsLoopKey)
-                val ii = oiwfsLoopStates.values().indexOf(Choice("LOST"))
+                val ii = oiwfsLoopStates.jValues().indexOf(Choice("LOST"))
                 if (ii != -1) handleOiwfsLoopOpen(ii)
             }
         }
@@ -92,7 +91,7 @@ script {
 
     handleSetup("enableOiwfsTtf") { command ->
         val ttfProbeNum = when (val event = getEvent(oiwfsStateEvent.key()).first()) {
-            is SystemEvent -> event(oiwfsStateEnableKey).values().indexOf(Choice("TTF"))
+            is SystemEvent -> event(oiwfsStateEnableKey).jValues().indexOf(Choice("TTF"))
             else -> -1
         }
 
@@ -139,7 +138,7 @@ script {
                     }
 
                     attempts += 1
-                    stopIf((timesGuideStarLocked == guideStarLockedThreshold) || (attempts == maxAttempts))
+                    stopWhen((timesGuideStarLocked == guideStarLockedThreshold) || (attempts == maxAttempts))
                 }
 
                 if (timesGuideStarLocked == guideStarLockedThreshold) addOrUpdateCommand(Completed(command.runId()))
