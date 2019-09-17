@@ -65,7 +65,7 @@ script {
         when (event) {
             is SystemEvent -> {
                 val oiwfsLoopStates = event(oiwfsLoopKey)
-                val ii = oiwfsLoopStates.jValues().indexOf(Choice("LOST"))
+                val ii = oiwfsLoopStates.values.indexOf(Choice("LOST"))
                 if (ii != -1) handleOiwfsLoopOpen(ii)
             }
         }
@@ -91,7 +91,7 @@ script {
 
     handleSetup("enableOiwfsTtf") { command ->
         val ttfProbeNum = when (val event = getEvent(oiwfsStateEvent.key()).first()) {
-            is SystemEvent -> event(oiwfsStateEnableKey).jValues().indexOf(Choice("TTF"))
+            is SystemEvent -> event(oiwfsStateEnableKey).values.indexOf(Choice("TTF"))
             else -> -1
         }
 
